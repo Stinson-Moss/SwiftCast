@@ -1,0 +1,1 @@
+Clone of original roblox swiftcast module

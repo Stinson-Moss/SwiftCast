@@ -34,6 +34,11 @@ RaycastFunctions.Shapecast = function(rayOrigin, rayDirection, raycastParams, pr
 	return workspace:Shapecast(projectile.ShapecastPart, rayDirection, raycastParams)
 end :: Types.RaycastFunction
 
+-- Just for visual effects and being moved via the move methods presented
+RaycastFunctions.None = function(rayOrigin, rayDirection, raycastParams, projectile, iteration)
+	return nil
+end
+
 RaycastFunctions.Default = RaycastFunctions.Raycast
 
 return table.freeze(RaycastFunctions)

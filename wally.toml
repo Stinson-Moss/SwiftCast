@@ -1,0 +1,7 @@
+[package]
+name = "stinson-moss/swiftcast"
+version = "0.2.1"
+registry = "https://github.com/Stinson-Moss/wally-index"
+realm = "shared"
+
+[dependencies]

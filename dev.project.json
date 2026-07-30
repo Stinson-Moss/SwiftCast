@@ -1,0 +1,18 @@
+{
+  "name": "SwiftCast",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Source": {
+        "$path": "src",
+        "$properties": {
+          "Attributes": {
+            "Version": {
+              "String": "1.4"
+            }
+          }
+        }
+      }
+    }
+  }
+}

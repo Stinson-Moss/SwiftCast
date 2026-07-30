@@ -5,3 +5,6 @@
 /*.rbxmx
 /sourcemap.json
 .DS_Store
+selene.toml
+.vscode
+Packages
