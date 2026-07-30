@@ -33,12 +33,14 @@ MotionFunctions.Default = table.freeze({
 --   decay            = e^(-k * t)
 --   v(t) = terminalVelocity + velocityDelta * decay
 --   p(t) = p0 + terminalVelocity * t + (velocityDelta / k) * (1 - decay)
+-- Drag coefficient k is read from projectile.UserData.DragCoefficient, must be positive (units: 1/seconds).
+-- When Acceleration = Vector3.zero, terminalVelocity = Vector3.zero (pure exponential decay to standstill).
 local function GetDragCoefficient(projectile: Types.Projectile): number
-	local userData = projectile.UserData :: any
-	local dragCoefficient = userData and userData.DragCoefficient
+	local userData = projectile.UserData
+	local dragCoefficient = typeof(userData) == "table" and userData.DragCoefficient
 	assert(
-		typeof(dragCoefficient) == "number" and dragCoefficient ~= 0,
-		"[SwiftCast] LinearDrag motion function requires projectile.UserData.DragCoefficient to be a non-zero number"
+		typeof(dragCoefficient) == "number" and dragCoefficient > 0,
+		"[SwiftCast] LinearDrag motion function requires projectile.UserData.DragCoefficient to be a positive number"
 	)
 	return dragCoefficient
 end
