@@ -5,6 +5,7 @@ local ProjectileSettings = {}
 
 local Types = require(script.Parent.Types)
 local RaycastFunctions = require(script.Parent.RaycastFunctions)
+local MotionFunctions = require(script.Parent.MotionFunctions)
 
 function ProjectileSettings.new(projectileSettings: Types.ProjectileSettingsOptional?): Types.ProjectileSettings
 	local projectileSettings: Types.ProjectileSettingsOptional = projectileSettings or {}
@@ -14,6 +15,7 @@ function ProjectileSettings.new(projectileSettings: Types.ProjectileSettingsOpti
 		MaxPiercesPerStep =  projectileSettings.MaxPiercesPerStep or 1,
 		RaycastParams = projectileSettings.RaycastParams,
 		RaycastFunction = projectileSettings.RaycastFunction or RaycastFunctions.Default,
+		MotionFunctions = projectileSettings.MotionFunctions or MotionFunctions.Default,
 		CanPierce = projectileSettings.CanPierce or false,
 		BlockcastSize = projectileSettings.BlockcastSize,
 		SpherecastRadius = projectileSettings.SpherecastRadius,

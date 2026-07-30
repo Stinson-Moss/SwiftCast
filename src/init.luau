@@ -6,15 +6,20 @@ local SwiftCast = {}
 local Types = require(script.Types)
 local Simulation = require(script.Simulation)
 local RaycastFunctions = require(script.RaycastFunctions)
+local MotionFunctions = require(script.MotionFunctions)
 local ProjectileSettings = require(script.ProjectileSettings)
 
 export type Projectile = Types.Projectile
 export type RaycastFunction = Types.RaycastFunction
+export type PositionFunction = Types.PositionFunction
+export type VelocityFunction = Types.VelocityFunction
+export type MotionFunctions = Types.MotionFunctions
 export type ProjectileSettings = Types.ProjectileSettings
 export type ProjectileConstructorArgs = Types.ProjectileConstructorArgs
 
 SwiftCast.ProjectileSettings = ProjectileSettings
 SwiftCast.RaycastFunctions = RaycastFunctions
+SwiftCast.MotionFunctions = MotionFunctions
 
 SwiftCast.SpawnProjectile = Simulation.SpawnProjectile
 SwiftCast.CreateProjectile = Simulation.CreateProjectile

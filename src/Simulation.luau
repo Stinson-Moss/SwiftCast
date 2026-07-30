@@ -208,14 +208,8 @@ local function UpdateProjectile(projectile: Projectile, deltaTime: number)
 	projectile._Accumulator = accumulator - stepDeltaTime
 
 	local position = projectile.Position
-	local acceleration = projectile.Acceleration
-
-	-- Closed-Form discrete fixed timestep integration under constant-acceleration 
-	local newVelocity = projectile.Velocity
-	local newPosition = position
-		+ newVelocity * stepDeltaTime
-		+ 0.5 * acceleration * FIXED_DELTA_TIME * FIXED_DELTA_TIME * stepCount * (stepCount + 1)
-	newVelocity += acceleration * stepDeltaTime
+	local newPosition = projectile.PositionFunction(projectile, stepCount)
+	local newVelocity = projectile.VelocityFunction(projectile, stepCount)
 
 	local deltaDistance = (newPosition - position).Magnitude
 	if deltaDistance <= EPSILON then
@@ -295,14 +289,15 @@ else
 end
 
 local function NewProjectile(constructorArgs: ProjectileConstructorArgs, projectileSettings: ProjectileSettings?): Projectile
-	local projectileSettings = projectileSettings or DefaultProjectileSettings
+	local resolvedProjectileSettings = projectileSettings or DefaultProjectileSettings
 	local position = constructorArgs.Position or Vector3.zero
 	local canPierce = constructorArgs.CanPierce :: Types.CanPierce
 	if canPierce == nil then
-		canPierce = projectileSettings.CanPierce
+		canPierce = resolvedProjectileSettings.CanPierce
 	end
 	local projectilePart = constructorArgs.ProjectilePart
 	local projectilePartRotation = if projectilePart then projectilePart.CFrame.Rotation else CFrame.identity
+	local motionFunctions = constructorArgs.MotionFunctions or resolvedProjectileSettings.MotionFunctions
 	local projectile: Projectile = {
 		_Active = false,
 		_Destroyed = false,
@@ -321,11 +316,13 @@ local function NewProjectile(constructorArgs: ProjectileConstructorArgs, project
 		Elapsed = 0,
 		DistanceTravelled = 0,
 
-		MaxFlyTime = constructorArgs.MaxFlyTime or projectileSettings.MaxFlyTime,
-		MaxFlyDistance = constructorArgs.MaxFlyDistance or projectileSettings.MaxFlyDistance,
-		MaxPiercesPerStep = constructorArgs.MaxPiercesPerStep or projectileSettings.MaxPiercesPerStep,
-		RaycastParams = constructorArgs.RaycastParams or projectileSettings.RaycastParams,
-		RaycastFunction = constructorArgs.RaycastFunction or projectileSettings.RaycastFunction,
+		MaxFlyTime = constructorArgs.MaxFlyTime or resolvedProjectileSettings.MaxFlyTime,
+		MaxFlyDistance = constructorArgs.MaxFlyDistance or resolvedProjectileSettings.MaxFlyDistance,
+		MaxPiercesPerStep = constructorArgs.MaxPiercesPerStep or resolvedProjectileSettings.MaxPiercesPerStep,
+		RaycastParams = constructorArgs.RaycastParams or resolvedProjectileSettings.RaycastParams,
+		RaycastFunction = constructorArgs.RaycastFunction or resolvedProjectileSettings.RaycastFunction,
+		PositionFunction = motionFunctions.PositionFunction,
+		VelocityFunction = motionFunctions.VelocityFunction,
 		ProjectilePart = projectilePart,
 		ProjectilePartRotation = constructorArgs.ProjectilePartRotation or projectilePartRotation,
 
@@ -338,9 +335,9 @@ local function NewProjectile(constructorArgs: ProjectileConstructorArgs, project
 		PostTransform = constructorArgs.PostTransform,
 		PostTransformSafe = constructorArgs.PostTransformSafe,
 
-		BlockcastSize = constructorArgs.BlockcastSize or projectileSettings.BlockcastSize,
-		SpherecastRadius = constructorArgs.SpherecastRadius or projectileSettings.SpherecastRadius,
-		ShapecastPart = constructorArgs.ShapecastPart or projectileSettings.ShapecastPart,
+		BlockcastSize = constructorArgs.BlockcastSize or resolvedProjectileSettings.BlockcastSize,
+		SpherecastRadius = constructorArgs.SpherecastRadius or resolvedProjectileSettings.SpherecastRadius,
+		ShapecastPart = constructorArgs.ShapecastPart or resolvedProjectileSettings.ShapecastPart,
 		UserData = constructorArgs.UserData,
 	}
 
